@@ -1,25 +1,27 @@
-;; Credential Issuance Contract
+;; Skill Assessment Contract
 
 ;; Data
-(define-map credentials uint {student: principal, course-id: uint, issued-on: uint})
+(define-map skills uint {name: (string-ascii 64), description: (string-ascii 256)})
+(define-map assessments {student: principal, skill-id: uint} {score: uint, assessed-on: uint})
 
 ;; Error codes
 (define-constant ERR-NOT-FOUND (err u404))
 (define-constant ERR-UNAUTHORIZED (err u403))
 
 ;; Functions
-(define-public (issue-credential (id uint) (student principal) (course-id uint))
-  (ok (map-set credentials id {student: student, course-id: course-id, issued-on: block-height})))
+(define-public (add-skill (id uint) (name (string-ascii 64)) (description (string-ascii 256)))
+  (ok (map-set skills id {name: name, description: description})))
 
-(define-read-only (get-credential (id uint))
-  (match (map-get? credentials id)
-    credential (ok credential)
+(define-public (assess-skill (student principal) (skill-id uint) (score uint))
+  (ok (map-set assessments {student: student, skill-id: skill-id} {score: score, assessed-on: block-height})))
+
+(define-read-only (get-skill (id uint))
+  (match (map-get? skills id)
+    skill (ok skill)
     ERR-NOT-FOUND))
 
-(define-read-only (verify-credential (id uint) (student principal) (course-id uint))
-  (match (map-get? credentials id)
-    credential (ok (and
-                    (is-eq (get student credential) student)
-                    (is-eq (get course-id credential) course-id)))
+(define-read-only (get-assessment (student principal) (skill-id uint))
+  (match (map-get? assessments {student: student, skill-id: skill-id})
+    assessment (ok assessment)
     ERR-NOT-FOUND))
 
