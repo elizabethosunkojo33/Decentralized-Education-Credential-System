@@ -5,3 +5,5 @@ P
  contracts/course-completion.clar,0/8/085ec857a865b72446edb6058225ce0ee9cee950
 O
 tests/course-completion.test.ts,9/a/9aa82062ce011d3bc4307c773c0131b6dc0c7564
+R
+"contracts/credential-issuance.clar,e/8/e8cc6a7425325a7af9cc95450ccc857f9fe46165
